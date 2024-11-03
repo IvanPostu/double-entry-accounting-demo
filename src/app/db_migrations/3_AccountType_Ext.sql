@@ -1,5 +1,5 @@
 CREATE TABLE AccountType_Ext(
-   AccountTypeCode   CHAR(2) PRIMARY KEY NOT NULL,
+   AccountType_Ext   CHAR(2) PRIMARY KEY NOT NULL,
    XactTypeCode      CHAR(2) NOT NULL,
    Fee               REAL    NOT NULL,
    Description       TEXT    NOT NULL
