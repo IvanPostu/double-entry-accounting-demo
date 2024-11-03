@@ -8,14 +8,16 @@ const dbMigrationsDirectoryPath = path.resolve(__dirname, 'db_migrations');
 
 export class DoubleEntryAccount {
   private readonly db: Database;
+  private readonly dbPath: string;
 
-  private constructor(db: Database) {
+  private constructor(db: Database, dbPath: string) {
     this.db = db;
+    this.dbPath = dbPath;
   }
 
   public static async create(): Promise<DoubleEntryAccount> {
-    const db: Database = await createAndMigrateDb();
-    const instance = new DoubleEntryAccount(db);
+    const { db, dbPath } = await createAndMigrateDb();
+    const instance = new DoubleEntryAccount(db, dbPath);
     return instance;
   }
 
@@ -25,10 +27,11 @@ export class DoubleEntryAccount {
         throw new Error('Error closing database:' + err.message);
       }
     });
+    console.log(`Closed database: ${this.dbPath}`);
   }
 }
 
-async function createAndMigrateDb(): Promise<Database> {
+async function createAndMigrateDb(): Promise<{ db: Database; dbPath: string }> {
   const nowAsMilliseconds = new Date().getTime();
   const tempDir = path.join(os.tmpdir(), 'mytempdb' + nowAsMilliseconds);
   const dbFile = path.join(tempDir, 'database.sqlite');
@@ -42,7 +45,7 @@ async function createAndMigrateDb(): Promise<Database> {
     console.log(`Successfully migrated: ${queryEntry.migrationFilename}`);
   }
 
-  return db;
+  return { db, dbPath: dbFile };
 }
 
 async function connectToDb(dbFile: string): Promise<Database> {
