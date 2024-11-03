@@ -23,15 +23,8 @@ export class DoubleEntryAccount {
     this.db.close((err) => {
       if (err) {
         throw new Error('Error closing database:' + err.message);
-      } else {
-        throw new Error('Database connection closed.');
       }
     });
-  }
-
-  public someMethod(): void {
-    console.log('Method called!');
-    console.log(getDbMigrationQueries(dbMigrationsDirectoryPath));
   }
 }
 
@@ -68,10 +61,9 @@ async function executeQuery(db: Database, query: string): Promise<1> {
     db.run(query, (err) => {
       if (err) {
         reject(new Error('Error creating table:' + err.message));
-      } else {
-        resolve(1);
       }
     });
+    resolve(1);
   });
 }
 
